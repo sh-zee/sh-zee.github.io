@@ -3,14 +3,7 @@ import "./App.css";
 function App() {
   return (
     <>
-      <div
-        style={{
-          position: 'relative',
-          backgroundColor: 'black',
-          height: "100vh",
-          width: "100vw",
-        }}
-      ></div>
+      <div className="relative h-screen w-[50vw] bg-amber-900"></div>
     </>
   );
 }
