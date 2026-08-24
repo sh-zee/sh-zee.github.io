@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# Private source material — never publish or commit
+Profile.pdf
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
