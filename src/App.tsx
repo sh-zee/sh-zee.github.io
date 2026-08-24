@@ -1,5 +1,10 @@
 import { useState } from "react";
 import { ArrowDownRight, ArrowUpRight, BriefcaseBusiness, Check, Github, Linkedin, Mail, MapPin, Menu, X } from "lucide-react";
+import AnimatedContent from "./components/AnimatedContent";
+import Aurora from "./components/Aurora";
+import BlurText from "./components/BlurText";
+import CountUp from "./components/CountUp";
+import SpotlightCard from "./components/SpotlightCard";
 import "./App.css";
 
 const projects = [
@@ -22,6 +27,8 @@ const tech = {
   "Cloud & AI": ["AWS", "GCP", "OpenAI", "RAG", "Vector DBs", "LangChain"],
 };
 
+const auroraColors = ["#6D28D9", "#B8F35B", "#0891B2"];
+
 function isLikelyInEurope() {
   const zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   return zone.startsWith("Europe/") || ["Atlantic/Canary", "Atlantic/Faroe", "Atlantic/Madeira", "Atlantic/Reykjavik"].includes(zone);
@@ -42,10 +49,11 @@ function App() {
     </header>
     <main id="top">
       <section className="hero section-pad">
+        <div className="aurora-layer"><Aurora colorStops={auroraColors} amplitude={1.25} blend={0.62} speed={0.65}/></div>
         <div className="hero-copy reveal">
           <div className="availability"><i/> Available for remote opportunities</div>
           <p className="eyebrow">Senior Backend Engineer · Rust · IoT</p>
-          <h1>I engineer the systems <em>behind the experience.</em></h1>
+          <BlurText text="I engineer the systems behind the experience." delay={65} animateBy="words" direction="bottom" className="hero-title"/>
           <p className="hero-lede">I'm Zeeshan—a backend-focused software engineer with 9 years of experience turning complex product ideas into dependable, scalable systems.</p>
           <div className="hero-actions"><a className="button primary" href="#work">Explore my work <ArrowDownRight size={17}/></a><a className="text-link" href="mailto:hello.zeesh@gmail.com">hello.zeesh@gmail.com <ArrowUpRight size={15}/></a></div>
         </div>
@@ -54,15 +62,15 @@ function App() {
           <div className="portrait-frame">{photoAvailable ? <img src="/profile-photo.jpg" alt="Zeeshan Iqbal" onError={() => setPhotoAvailable(false)}/> : <span className="portrait-fallback">ZI</span>}</div>
           <div className="code-card"><span>system.profile</span><strong>backend_first</strong><small>reliable · scalable · human</small></div>
         </div>
-        <div className="metric-strip"><div><strong>9</strong><span>years building<br/>production systems</span></div><div><strong>2.3M+</strong><span>users served by<br/>systems I've scaled</span></div><div><strong>150TB</strong><span>data infrastructure<br/>handled at scale</span></div><div><strong>5×</strong><span>API performance<br/>improvement</span></div></div>
+        <div className="metric-strip"><div><strong><CountUp to={9} duration={1.4}/></strong><span>years building<br/>production systems</span></div><div><strong><CountUp to={2.3} duration={1.8}/>M+</strong><span>users served by<br/>systems I've scaled</span></div><div><strong><CountUp to={150} duration={2}/>TB</strong><span>data infrastructure<br/>handled at scale</span></div><div><strong><CountUp to={5} duration={1.5}/>×</strong><span>API performance<br/>improvement</span></div></div>
       </section>
       <section className="projects section-pad" id="work">
         <div className="section-heading"><div><p className="eyebrow">Selected work</p><h2>Products with<br/><em>real-world weight.</em></h2></div><p>From financial intelligence to event platforms and AI mentorship—systems built to perform when the stakes are real.</p></div>
-        <div className="project-list">{projects.map(project => <article className={`project-card ${project.accent}`} key={project.name}><div className="project-number">{project.index}</div><div className="project-main"><p className="project-type">{project.type}</p><h3>{project.name}</h3><p>{project.description}</p><div className="tags">{project.stack.map(item => <span key={item}>{item}</span>)}</div></div><div className="project-impact"><p>Selected impact</p>{project.impact.map(item => <span key={item}><Check size={13}/> {item}</span>)}</div></article>)}</div>
+        <div className="project-list">{projects.map((project, index) => <AnimatedContent key={project.name} distance={55} delay={index * .08} duration={.75}><SpotlightCard className={`project-card ${project.accent}`} spotlightColor={project.accent === "violet" ? "rgba(159, 140, 255, 0.18)" : project.accent === "cyan" ? "rgba(85, 217, 219, 0.16)" : "rgba(239, 188, 95, 0.16)"}><div className="project-number">{project.index}</div><div className="project-main"><p className="project-type">{project.type}</p><h3>{project.name}</h3><p>{project.description}</p><div className="tags">{project.stack.map(item => <span key={item}>{item}</span>)}</div></div><div className="project-impact"><p>Selected impact</p>{project.impact.map(item => <span key={item}><Check size={13}/> {item}</span>)}</div></SpotlightCard></AnimatedContent>)}</div>
       </section>
       <section className="experience section-pad" id="experience">
         <div className="section-heading compact"><div><p className="eyebrow">Experience</p><h2>Nine years of<br/><em>shipping & scaling.</em></h2></div><p>Hands-on engineering, architectural ownership, and calm technical leadership across international teams.</p></div>
-        <div className="timeline">{experience.map(item => <article key={item.company}><p className="timeline-date">{item.date}</p><div><h3>{item.role}</h3><p className="company">{item.company}</p></div><p className="timeline-detail">{item.detail}</p></article>)}</div>
+        <div className="timeline">{experience.map((item, index) => <AnimatedContent key={item.company} distance={40} delay={index * .06}><article><p className="timeline-date">{item.date}</p><div><h3>{item.role}</h3><p className="company">{item.company}</p></div><p className="timeline-detail">{item.detail}</p></article></AnimatedContent>)}</div>
       </section>
       <section className="about section-pad" id="about">
         <div className="about-intro"><p className="eyebrow">Under the hood</p><h2>Depth where it matters.<br/><em>Range where it helps.</em></h2><p>I work best at the intersection of product thinking and deep backend engineering: designing clear domains, choosing pragmatic architecture, and making software easier for the next engineer to change.</p></div>
