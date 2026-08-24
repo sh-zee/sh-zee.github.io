@@ -10,7 +10,8 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          animation: ["motion/react", "gsap", "ogl"],
+          animation: ["motion/react", "gsap"],
+          webgl: ["three", "@react-three/fiber"],
           react: ["react", "react-dom"],
         },
       },

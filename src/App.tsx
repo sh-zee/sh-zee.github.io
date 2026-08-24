@@ -1,33 +1,51 @@
 import { useState } from "react";
-import { ArrowDownRight, ArrowUpRight, BriefcaseBusiness, Check, Github, Linkedin, Mail, MapPin, Menu, X } from "lucide-react";
-import AnimatedContent from "./components/AnimatedContent";
-import Aurora from "./components/Aurora";
-import BlurText from "./components/BlurText";
-import CountUp from "./components/CountUp";
-import SpotlightCard from "./components/SpotlightCard";
+import {
+  BookOpen, BriefcaseBusiness, Code2, ExternalLink, FolderCode, Github,
+  Heart, House, Linkedin, Mail, MapPin, Newspaper, Plane, Trophy,
+} from "lucide-react";
+import Antigravity from "./components/Antigravity";
+import BounceCards from "./components/BounceCards";
+import Dock from "./components/Dock";
+import Folder from "./components/Folder";
+import MagicBento, { type BentoCardProps } from "./components/MagicBento";
+import ProfileCard from "./components/ProfileCard";
+import RotatingText from "./components/RotatingText";
+import ScrollStack, { ScrollStackItem } from "./components/ScrollStack";
 import "./App.css";
 
+const roles = [
+  "Senior Backend Engineer", "Senior Software Engineer", "Senior Full-Stack Engineer",
+  "Rust Engineer", "IoT Engineer",
+];
+
+const skills: BentoCardProps[] = [
+  { label: "Core", title: "Backend systems", description: "NestJS · Node.js · Go · Python" },
+  { label: "Systems", title: "Rust & performance", description: "Rust · C/C++ · concurrency · profiling" },
+  { label: "Infrastructure", title: "Cloud architecture", description: "AWS · GCP · serverless · DevOps" },
+  { label: "Data", title: "Storage & messaging", description: "PostgreSQL · Kafka · Redis · DynamoDB" },
+  { label: "Connected", title: "IoT engineering", description: "Sensors · telemetry · monitoring · edge" },
+  { label: "Intelligence", title: "Applied AI", description: "OpenAI · RAG · vector DBs · LangChain" },
+];
+
 const projects = [
-  { index: "01", name: "Emanda", type: "FinTech / Digital accountant", description: "A financial intelligence platform built around a modular, domain-driven architecture—turning complex accounting data into clear, actionable insight.", impact: ["250+ API endpoints", "8× database performance", "80% less memory"], stack: ["NestJS", "PostgreSQL", "AWS", "AI / LLMs"], accent: "violet" },
-  { index: "02", name: "FanKave", type: "SaaS / Event engagement", description: "An enterprise event engagement platform embedded inside event apps, helping global organizations build more participatory experiences.", impact: ["5× faster APIs", "35 critical issues resolved", "Enterprise scale"], stack: ["Node.js", "TypeScript", "Testing", "Security"], accent: "cyan" },
-  { index: "03", name: "KIM", type: "AI / Professional mentor", description: "A private AI mentor that uses professional context and graph-based knowledge to provide relevant, personalized career guidance.", impact: ["Context-aware guidance", "Graph knowledge", "Private product"], stack: ["OpenAI", "Graph DB", "NestJS", "Angular"], accent: "amber" },
+  { name: "Emanda", kind: "FinTech · Digital accountant", summary: "DDD financial platform with 250+ endpoints.", impact: "8× database performance", color: "#8b5cf6", files: ["DDD", "250 APIs", "AWS"] },
+  { name: "FanKave", kind: "SaaS · Event engagement", summary: "Enterprise engagement infrastructure for event apps.", impact: "5× faster APIs", color: "#06b6d4", files: ["Node 24", "TDD", "Security"] },
+  { name: "KIM", kind: "AI · Professional mentor", summary: "Private, context-aware AI career mentorship.", impact: "Graph-powered context", color: "#f59e0b", files: ["OpenAI", "Graph", "NestJS"] },
+  { name: "Open-AIQ", kind: "Open source · IoT", summary: "Crowdsourced real-time air quality monitoring.", impact: "Open environmental data", color: "#b8f35b", files: ["IoT", "Open", "Air"] },
 ];
 
 const experience = [
-  { date: "Dec 2025 — Jul 2026", role: "Software Engineer", company: "FanKave · Santa Clara, CA", detail: "Improved API performance by 5×, established the product's first meaningful test coverage, and led a security-focused Node.js modernization." },
-  { date: "2023 — 2025", role: "Lead Software Engineer", company: "Avant Tech · Victoria, Australia", detail: "Led Emanda's architecture and delivery, using DDD, a modular monolith, TDD, AWS, and AI services to create a reliable FinTech platform." },
-  { date: "2019 — 2023", role: "Senior Software Engineer", company: "CYBR Node · Austin, TX", detail: "Led five engineers and helped scale systems to 2.3M+ users and 150 TB of data while improving team velocity and mentoring three engineers into senior roles." },
-  { date: "2017 — 2019", role: "Full-Stack & IoT Developer", company: "Makeistan · Pakistan", detail: "Built connected systems for cold-chain, CO₂, warehouse, and textile monitoring across research, startup, and enterprise environments." },
+  { dates: "Dec 2025 — Jul 2026", role: "Software Engineer", company: "FanKave · Santa Clara, CA", body: "Accelerated APIs by 5×, created the first meaningful test suite, and eliminated critical security vulnerabilities through a complete Node.js modernization.", facts: ["400ms → 100ms", "0% → 25% coverage", "35 major vulnerabilities resolved"] },
+  { dates: "Mar 2023 — Nov 2025", role: "Lead Software Engineer", company: "Avant Tech · Victoria, Australia", body: "Led Emanda from architecture through delivery using DDD, a modular monolith, TDD, AWS, and applied AI.", facts: ["250+ endpoints", "8× faster database", "80% less memory"] },
+  { dates: "Feb 2019 — Feb 2023", role: "Senior Software Engineer", company: "CYBR Node · Austin, TX", body: "Led five engineers while scaling backend infrastructure for multinational clients and mentoring three engineers into senior roles.", facts: ["2.3M+ users", "150TB data", "70% velocity increase"] },
+  { dates: "Jun 2017 — Jan 2019", role: "Full-Stack & IoT Developer", company: "Makeistan · Pakistan", body: "Built connected monitoring products for research centers, startups, small businesses, and multinational companies.", facts: ["Cold-chain monitoring", "CO₂ systems", "Warehouse telemetry"] },
 ];
 
-const tech = {
-  Languages: ["Rust", "Go", "TypeScript", "Python", "C / C++"],
-  Backend: ["NestJS", "Node.js", "Express", "Django", "Spring Boot"],
-  "Data & messaging": ["PostgreSQL", "MongoDB", "DynamoDB", "Kafka", "Redis", "Couchbase"],
-  "Cloud & AI": ["AWS", "GCP", "OpenAI", "RAG", "Vector DBs", "LangChain"],
-};
+const mediumUrl = "https://medium.com";
 
-const auroraColors = ["#6D28D9", "#B8F35B", "#0891B2"];
+function scrollToId(id: string) {
+  document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+}
 
 function isLikelyInEurope() {
   const zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -35,53 +53,70 @@ function isLikelyInEurope() {
 }
 
 function App() {
-  const [menuOpen, setMenuOpen] = useState(false);
   const [inEurope] = useState(isLikelyInEurope);
-  const [photoAvailable, setPhotoAvailable] = useState(true);
-  return <div className="site-shell">
-    <header className="nav-wrap">
-      <a className="monogram" href="#top" aria-label="Zeeshan Iqbal home">ZI<span>.</span></a>
-      <button className="menu-button" aria-label="Toggle navigation" aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X size={20}/> : <Menu size={20}/>}</button>
-      <nav className={menuOpen ? "nav-links open" : "nav-links"}>
-        <a href="#work" onClick={() => setMenuOpen(false)}>Work</a><a href="#experience" onClick={() => setMenuOpen(false)}>Experience</a><a href="#about" onClick={() => setMenuOpen(false)}>About</a>
-        <a className="nav-cta" href="mailto:hello.zeesh@gmail.com">Let's talk <ArrowUpRight size={15}/></a>
-      </nav>
-    </header>
-    <main id="top">
-      <section className="hero section-pad">
-        <div className="aurora-layer"><Aurora colorStops={auroraColors} amplitude={1.25} blend={0.62} speed={0.65}/></div>
-        <div className="hero-copy reveal">
-          <div className="availability"><i/> Available for remote opportunities</div>
-          <p className="eyebrow">Senior Backend Engineer · Rust · IoT</p>
-          <BlurText text="I engineer the systems behind the experience." delay={65} animateBy="words" direction="bottom" className="hero-title"/>
-          <p className="hero-lede">I'm Zeeshan—a backend-focused software engineer with 9 years of experience turning complex product ideas into dependable, scalable systems.</p>
-          <div className="hero-actions"><a className="button primary" href="#work">Explore my work <ArrowDownRight size={17}/></a><a className="text-link" href="mailto:hello.zeesh@gmail.com">hello.zeesh@gmail.com <ArrowUpRight size={15}/></a></div>
+  const dockItems = [
+    { icon: <House size={18}/>, label: "Info", onClick: () => scrollToId("info") },
+    { icon: <Code2 size={18}/>, label: "Skills", onClick: () => scrollToId("skills") },
+    { icon: <FolderCode size={18}/>, label: "Projects", onClick: () => scrollToId("projects") },
+    { icon: <BriefcaseBusiness size={18}/>, label: "Experience", onClick: () => scrollToId("experience") },
+    { icon: <Newspaper size={18}/>, label: "Writing", onClick: () => scrollToId("blogs") },
+    { icon: <Heart size={18}/>, label: "Hobbies", onClick: () => scrollToId("hobbies") },
+    { icon: <Mail size={18}/>, label: "Contact", onClick: () => { window.location.href = "mailto:hello.zeesh@gmail.com"; } },
+  ];
+
+  return <div className="portfolio-shell">
+    <div className="antigravity-bg" aria-hidden="true"><Antigravity count={170} color="#b8f35b" particleSize={1.15} ringRadius={7} magnetRadius={8} waveAmplitude={.55} waveSpeed={.25} autoAnimate particleShape="sphere"/></div>
+    <div className="dock-position"><Dock items={dockItems} baseItemSize={42} magnification={58} panelHeight={56} dockHeight={150} distance={130}/></div>
+
+    <main>
+      <section className="info-section section" id="info">
+        <div className="info-copy">
+          <p className="kicker"><span/> Available for remote work</p>
+          <p className="intro-label">Hello, I’m</p>
+          <h1>Zeeshan<br/>Iqbal<span>.</span></h1>
+          <div className="role-line"><span>I work as a</span><RotatingText texts={roles} rotationInterval={2400} mainClassName="rotating-role" splitBy="words" staggerDuration={.025}/></div>
+          <p className="intro-body">Nine years engineering dependable backend systems, connected products, and cloud platforms across FinTech, SaaS, AI, and IoT.</p>
+          <div className="intro-actions"><a className="primary-link" href="mailto:hello.zeesh@gmail.com">Let’s build something <ExternalLink size={16}/></a><a href="https://github.com/sh-zee" target="_blank" rel="noreferrer"><Github size={18}/> GitHub</a><a href="https://www.linkedin.com/in/zee-sh" target="_blank" rel="noreferrer"><Linkedin size={18}/> LinkedIn</a></div>
+          <div className="hero-stats"><div><strong>9</strong><span>years</span></div><div><strong>2.3M+</strong><span>users scaled</span></div><div><strong>150TB</strong><span>data handled</span></div></div>
         </div>
-        <div className="hero-visual reveal delay-1" aria-label="Portrait of Zeeshan Iqbal">
-          <div className="orbit orbit-one"/><div className="orbit orbit-two"/>
-          <div className="portrait-frame">{photoAvailable ? <img src="/profile-photo.jpg" alt="Zeeshan Iqbal" onError={() => setPhotoAvailable(false)}/> : <span className="portrait-fallback">ZI</span>}</div>
-          <div className="code-card"><span>system.profile</span><strong>backend_first</strong><small>reliable · scalable · human</small></div>
-        </div>
-        <div className="metric-strip"><div><strong><CountUp to={9} duration={1.4}/></strong><span>years building<br/>production systems</span></div><div><strong><CountUp to={2.3} duration={1.8}/>M+</strong><span>users served by<br/>systems I've scaled</span></div><div><strong><CountUp to={150} duration={2}/>TB</strong><span>data infrastructure<br/>handled at scale</span></div><div><strong><CountUp to={5} duration={1.5}/>×</strong><span>API performance<br/>improvement</span></div></div>
+        <div className="profile-wrap"><ProfileCard avatarUrl="/profile-photo.jpg" miniAvatarUrl="/profile-photo.jpg" iconUrl="/profile-photo.jpg" grainUrl="" name="Zeeshan Iqbal" title="Senior Backend Engineer" handle="sh-zee" status="Available" contactText="Email me" innerGradient="linear-gradient(145deg,#17201d 0%,#312e8155 52%,#164e6355 100%)" behindGlowColor="rgba(184,243,91,.28)" onContactClick={() => { window.location.href = "mailto:hello.zeesh@gmail.com"; }}/></div>
       </section>
-      <section className="projects section-pad" id="work">
-        <div className="section-heading"><div><p className="eyebrow">Selected work</p><h2>Products with<br/><em>real-world weight.</em></h2></div><p>From financial intelligence to event platforms and AI mentorship—systems built to perform when the stakes are real.</p></div>
-        <div className="project-list">{projects.map((project, index) => <AnimatedContent key={project.name} distance={55} delay={index * .08} duration={.75}><SpotlightCard className={`project-card ${project.accent}`} spotlightColor={project.accent === "violet" ? "rgba(159, 140, 255, 0.18)" : project.accent === "cyan" ? "rgba(85, 217, 219, 0.16)" : "rgba(239, 188, 95, 0.16)"}><div className="project-number">{project.index}</div><div className="project-main"><p className="project-type">{project.type}</p><h3>{project.name}</h3><p>{project.description}</p><div className="tags">{project.stack.map(item => <span key={item}>{item}</span>)}</div></div><div className="project-impact"><p>Selected impact</p>{project.impact.map(item => <span key={item}><Check size={13}/> {item}</span>)}</div></SpotlightCard></AnimatedContent>)}</div>
+
+      <section className="section" id="skills">
+        <header className="section-head"><p>01 / Expertise</p><h2>A practical toolkit for<br/><em>systems that endure.</em></h2><span>Capability backed by shipped work—not a keyword inventory.</span></header>
+        <div className="bento-wrap"><MagicBento items={skills} textAutoHide={false} enableTilt enableStars enableSpotlight enableBorderGlow glowColor="184, 243, 91" particleCount={8}/></div>
       </section>
-      <section className="experience section-pad" id="experience">
-        <div className="section-heading compact"><div><p className="eyebrow">Experience</p><h2>Nine years of<br/><em>shipping & scaling.</em></h2></div><p>Hands-on engineering, architectural ownership, and calm technical leadership across international teams.</p></div>
-        <div className="timeline">{experience.map((item, index) => <AnimatedContent key={item.company} distance={40} delay={index * .06}><article><p className="timeline-date">{item.date}</p><div><h3>{item.role}</h3><p className="company">{item.company}</p></div><p className="timeline-detail">{item.detail}</p></article></AnimatedContent>)}</div>
+
+      <section className="section" id="projects">
+        <header className="section-head"><p>02 / Selected projects</p><h2>Open the work.<br/><em>See what’s inside.</em></h2><span>Four products spanning finance, events, AI mentorship, and environmental IoT.</span></header>
+        <div className="folder-grid">{projects.map(project => <article className="folder-project" key={project.name}>
+          <div className="folder-stage"><Folder color={project.color} size={1.25} items={project.files.map(file => <span className="paper-copy" key={file}>{file}</span>)}/></div>
+          <p className="project-kind">{project.kind}</p><h3>{project.name}</h3><p>{project.summary}</p><strong>{project.impact}</strong>
+        </article>)}</div>
       </section>
-      <section className="about section-pad" id="about">
-        <div className="about-intro"><p className="eyebrow">Under the hood</p><h2>Depth where it matters.<br/><em>Range where it helps.</em></h2><p>I work best at the intersection of product thinking and deep backend engineering: designing clear domains, choosing pragmatic architecture, and making software easier for the next engineer to change.</p></div>
-        <div className="tech-grid">{Object.entries(tech).map(([group, items]) => <div className="tech-group" key={group}><h3>{group}</h3><p>{items.join(" · ")}</p></div>)}</div>
-        <div className="principles"><span>01</span><p>Architecture should make the product easier to evolve, not merely look impressive on a diagram.</p><span>02</span><p>Tests are a design tool. They create the confidence needed to move quickly without gambling on quality.</p><span>03</span><p>Senior engineering means raising the capability of the entire team—not becoming its single point of failure.</p></div>
+
+      <section className="experience-section section" id="experience">
+        <header className="section-head"><p>03 / Work experience</p><h2>Nine years of<br/><em>shipping and scaling.</em></h2><span>Scroll through the roles that shaped how I design, lead, and deliver.</span></header>
+        <ScrollStack useWindowScroll itemDistance={90} itemScale={.025} itemStackDistance={26} stackPosition="16%" baseScale={.9} rotationAmount={.4} blurAmount={.3}>
+          {experience.map((item, index) => <ScrollStackItem key={item.company} itemClassName={`experience-card experience-${index + 1}`}><div className="experience-top"><span>{item.dates}</span><b>0{index + 1}</b></div><p className="company">{item.company}</p><h3>{item.role}</h3><p className="experience-body">{item.body}</p><div className="fact-row">{item.facts.map(fact => <span key={fact}>{fact}</span>)}</div></ScrollStackItem>)}
+        </ScrollStack>
       </section>
-      <section className="contact section-pad" id="contact">
-        <div className="contact-glow"/><p className="eyebrow">Open to what's next</p><h2>Have a hard problem?<br/><em>Let's make it tractable.</em></h2><p className="contact-copy">Available for senior backend roles, select freelance projects, and ambitious teams working across borders.{inEurope && " Open to relocation opportunities across Europe."}</p><a className="button primary large" href="mailto:hello.zeesh@gmail.com">Start a conversation <ArrowUpRight size={18}/></a><div className="contact-meta"><span><MapPin size={15}/> Pakistan · working globally</span><span><BriefcaseBusiness size={15}/> Remote & async-friendly</span></div>
+
+      <section className="section writing-section" id="blogs">
+        <header className="section-head"><p>04 / Writing</p><h2>Notes from the<br/><em>engineering trenches.</em></h2><span>I’m working through a writer’s block. The useful ideas are still accumulating.</span></header>
+        <a className="medium-card" href={mediumUrl} target="_blank" rel="noreferrer"><div><span>Coming to Medium</span><h3>Architecture, performance, IoT—and the trade-offs between them.</h3><p>Expect field notes on practical DDD, database migrations, testing inherited systems, Rust backends, and connected products.</p></div><div className="medium-arrow"><ExternalLink size={28}/><small>Read on Medium</small></div></a>
       </section>
+
+      <section className="section hobbies-section" id="hobbies">
+        <header className="section-head"><p>05 / Beyond the terminal</p><h2>The things that keep<br/><em>my perspective wide.</em></h2><span>Reading for depth, travel for context, chess for the pleasure of thinking ahead.</span></header>
+        <div className="hobbies-layout"><BounceCards images={["/hobbies/reading.svg", "/hobbies/travel.svg", "/hobbies/chess.svg"]} containerWidth={520} containerHeight={390} enableHover transformStyles={["rotate(-9deg) translate(-145px)", "rotate(2deg)", "rotate(10deg) translate(145px)"]}/><div className="hobby-list"><div><BookOpen/><span><b>Reading</b>Systems, history, psychology, and anything that changes the frame.</span></div><div><Plane/><span><b>Travel</b>New cities, unfamiliar routines, and seeing how other people build.</span></div><div><Trophy/><span><b>Chess</b>Pattern recognition, patience, and the cost of the tempting move.</span></div></div></div>
+      </section>
+
+      <section className="contact-section section"><p className="kicker"><span/> Open to what’s next</p><h2>Have a hard problem?<br/><em>Let’s make it tractable.</em></h2><p>Available for senior backend roles, select freelance projects, and globally distributed teams.{inEurope && " Open to relocation across Europe."}</p><a className="primary-link" href="mailto:hello.zeesh@gmail.com">hello.zeesh@gmail.com <ExternalLink size={16}/></a><div className="location"><MapPin size={14}/> Pakistan · working globally</div></section>
     </main>
-    <footer><a className="monogram" href="#top">ZI<span>.</span></a><p>Designed around systems, built with intention.</p><div className="socials"><a href="https://github.com/sh-zee" target="_blank" rel="noreferrer" aria-label="GitHub"><Github size={18}/></a><a href="https://www.linkedin.com/in/zee-sh" target="_blank" rel="noreferrer" aria-label="LinkedIn"><Linkedin size={18}/></a><a href="mailto:hello.zeesh@gmail.com" aria-label="Email"><Mail size={18}/></a></div></footer>
+
+    <footer><span>ZI.</span><p>Senior Backend Engineer · Rust · IoT</p><small>© {new Date().getFullYear()} Zeeshan Iqbal</small></footer>
   </div>;
 }
+
 export default App;
