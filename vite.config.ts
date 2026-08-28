@@ -1,7 +1,7 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-import tailwindcss from "@tailwindcss/vite";
-import path from "path";
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
+import path from 'path';
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -10,16 +10,16 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          animation: ["motion/react", "gsap"],
-          webgl: ["three", "@react-three/fiber"],
-          react: ["react", "react-dom"],
+          animation: ['motion/react', 'gsap'],
+          webgl: ['three', '@react-three/fiber'],
+          react: ['react', 'react-dom'],
         },
       },
     },
   },
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      '@': path.resolve(__dirname, './src'),
     },
   },
 });

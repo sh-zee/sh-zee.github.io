@@ -27,9 +27,9 @@ export default function BounceCards({
     'rotate(5deg) translate(-85px)',
     'rotate(-3deg)',
     'rotate(-10deg) translate(85px)',
-    'rotate(2deg) translate(170px)'
+    'rotate(2deg) translate(170px)',
   ],
-  enableHover = false
+  enableHover = false,
 }: BounceCardsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -42,8 +42,8 @@ export default function BounceCards({
           scale: 1,
           stagger: animationStagger,
           ease: easeType,
-          delay: animationDelay
-        }
+          delay: animationDelay,
+        },
       );
     }, containerRef);
     return () => ctx.revert();
@@ -60,7 +60,10 @@ export default function BounceCards({
     }
   };
 
-  const getPushedTransform = (baseTransform: string, offsetX: number): string => {
+  const getPushedTransform = (
+    baseTransform: string,
+    offsetX: number,
+  ): string => {
     const translateRegex = /translate\(([-0-9.]+)px\)/;
     const match = baseTransform.match(translateRegex);
     if (match) {
@@ -68,7 +71,9 @@ export default function BounceCards({
       const newX = currentX + offsetX;
       return baseTransform.replace(translateRegex, `translate(${newX}px)`);
     } else {
-      return baseTransform === 'none' ? `translate(${offsetX}px)` : `${baseTransform} translate(${offsetX}px)`;
+      return baseTransform === 'none'
+        ? `translate(${offsetX}px)`
+        : `${baseTransform} translate(${offsetX}px)`;
     }
   };
 
@@ -87,7 +92,7 @@ export default function BounceCards({
           transform: noRotation,
           duration: 0.4,
           ease: 'back.out(1.4)',
-          overwrite: 'auto'
+          overwrite: 'auto',
         });
       } else {
         const offsetX = i < hoveredIdx ? -160 : 160;
@@ -101,7 +106,7 @@ export default function BounceCards({
           duration: 0.4,
           ease: 'back.out(1.4)',
           delay,
-          overwrite: 'auto'
+          overwrite: 'auto',
         });
       }
     });
@@ -118,7 +123,7 @@ export default function BounceCards({
         transform: baseTransform,
         duration: 0.4,
         ease: 'back.out(1.4)',
-        overwrite: 'auto'
+        overwrite: 'auto',
       });
     });
   };
@@ -130,7 +135,7 @@ export default function BounceCards({
       style={{
         position: 'relative',
         width: containerWidth,
-        height: containerHeight
+        height: containerHeight,
       }}
     >
       {images.map((src, idx) => (

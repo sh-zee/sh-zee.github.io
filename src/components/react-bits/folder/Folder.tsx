@@ -13,7 +13,7 @@ const darkenColor = (hex: string, percent: number): string => {
   if (color.length === 3) {
     color = color
       .split('')
-      .map(c => c + c)
+      .map((c) => c + c)
       .join('');
   }
   const num = parseInt(color.slice(0, 6), 16);
@@ -23,10 +23,18 @@ const darkenColor = (hex: string, percent: number): string => {
   r = Math.max(0, Math.min(255, Math.floor(r * (1 - percent))));
   g = Math.max(0, Math.min(255, Math.floor(g * (1 - percent))));
   b = Math.max(0, Math.min(255, Math.floor(b * (1 - percent))));
-  return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
+  return (
+    '#' +
+    ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()
+  );
 };
 
-const Folder: React.FC<FolderProps> = ({ color = '#5227FF', size = 1, items = [], className = '' }) => {
+const Folder: React.FC<FolderProps> = ({
+  color = '#5227FF',
+  size = 1,
+  items = [],
+  className = '',
+}) => {
   const maxItems = 3;
   const papers = items.slice(0, maxItems);
   while (papers.length < maxItems) {
@@ -35,7 +43,7 @@ const Folder: React.FC<FolderProps> = ({ color = '#5227FF', size = 1, items = []
 
   const [open, setOpen] = useState(false);
   const [paperOffsets, setPaperOffsets] = useState<{ x: number; y: number }[]>(
-    Array.from({ length: maxItems }, () => ({ x: 0, y: 0 }))
+    Array.from({ length: maxItems }, () => ({ x: 0, y: 0 })),
   );
 
   const folderBackColor = darkenColor(color, 0.08);
@@ -44,28 +52,34 @@ const Folder: React.FC<FolderProps> = ({ color = '#5227FF', size = 1, items = []
   const paper3 = '#ffffff';
 
   const handleClick = () => {
-    setOpen(prev => !prev);
+    setOpen((prev) => !prev);
     if (open) {
       setPaperOffsets(Array.from({ length: maxItems }, () => ({ x: 0, y: 0 })));
     }
   };
 
-  const handlePaperMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>, index: number) => {
+  const handlePaperMouseMove = (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    index: number,
+  ) => {
     if (!open) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
     const offsetX = (e.clientX - centerX) * 0.15;
     const offsetY = (e.clientY - centerY) * 0.15;
-    setPaperOffsets(prev => {
+    setPaperOffsets((prev) => {
       const newOffsets = [...prev];
       newOffsets[index] = { x: offsetX, y: offsetY };
       return newOffsets;
     });
   };
 
-  const handlePaperMouseLeave = (_e: React.MouseEvent<HTMLDivElement, MouseEvent>, index: number) => {
-    setPaperOffsets(prev => {
+  const handlePaperMouseLeave = (
+    _e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    index: number,
+  ) => {
+    setPaperOffsets((prev) => {
       const newOffsets = [...prev];
       newOffsets[index] = { x: 0, y: 0 };
       return newOffsets;
@@ -77,7 +91,7 @@ const Folder: React.FC<FolderProps> = ({ color = '#5227FF', size = 1, items = []
     '--folder-back-color': folderBackColor,
     '--paper-1': paper1,
     '--paper-2': paper2,
-    '--paper-3': paper3
+    '--paper-3': paper3,
   } as React.CSSProperties;
 
   const folderClassName = `folder ${open ? 'open' : ''}`.trim();
@@ -89,7 +103,7 @@ const Folder: React.FC<FolderProps> = ({ color = '#5227FF', size = 1, items = []
         className={folderClassName}
         style={folderStyle}
         onClick={handleClick}
-        onKeyDown={e => {
+        onKeyDown={(e) => {
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
             handleClick();
@@ -105,13 +119,13 @@ const Folder: React.FC<FolderProps> = ({ color = '#5227FF', size = 1, items = []
             <div
               key={i}
               className={`paper paper-${i + 1}`}
-              onMouseMove={e => handlePaperMouseMove(e, i)}
-              onMouseLeave={e => handlePaperMouseLeave(e, i)}
+              onMouseMove={(e) => handlePaperMouseMove(e, i)}
+              onMouseLeave={(e) => handlePaperMouseLeave(e, i)}
               style={
                 open
                   ? ({
                       '--magnet-x': `${paperOffsets[i]?.x || 0}px`,
-                      '--magnet-y': `${paperOffsets[i]?.y || 0}px`
+                      '--magnet-y': `${paperOffsets[i]?.y || 0}px`,
                     } as React.CSSProperties)
                   : {}
               }

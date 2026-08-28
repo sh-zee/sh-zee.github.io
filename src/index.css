@@ -1,6 +1,19 @@
-@import "tailwindcss";
-@import "tw-animate-css";
-html, body, #root { min-height: 100%; }
-body { margin: 0; min-width: 320px; background: #090b0d; }
-* { border-color: rgba(255,255,255,.1); }
-::selection { color: #0b0e09; background: #b8f35b; }
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Google+Sans+Code:wght@300..700&display=swap');
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@theme {
+  --font-sans: 'Bricolage Grotesque', sans-serif;
+  --font-mono: 'Google Sans Code', monospace;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+body {
+  margin: 0;
+  min-width: 320px;
+  background: #120f17;
+}
