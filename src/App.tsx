@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   BookOpen,
   BriefcaseBusiness,
@@ -16,25 +16,23 @@ import {
   Trophy,
 } from 'lucide-react';
 import { Kicker, SectionHeader } from './components/portfolio';
+import Antigravity from './components/Antigravity';
+import RotatingText from './components/RotatingText';
 import {
-  Antigravity,
   BounceCards,
-  Dock,
   Folder,
   MagicBento,
-  ProfileCard,
-  RotatingText,
   ScrollStack,
   ScrollStackItem,
   type BentoCardProps,
 } from './components/react-bits';
 
 const roles = [
-  'Senior Software',
-  'Senior Backend',
+  ' Senior Software ',
+  ' Senior Backend. ',
   'Senior Full-Stack',
-  'IoT',
-  'Rust',
+  '       IoT       ',
+  '       Rust      ',
 ];
 
 const skills: BentoCardProps[] = [
@@ -141,14 +139,17 @@ const experience = [
 ];
 
 const sectionClass =
-  'mx-auto w-[88vw] max-w-[1120px] scroll-mt-12 py-20 md:py-28';
+  'mx-auto my-14 w-[88vw] max-w-[1120px] scroll-mt-12 rounded-[28px] border border-white/10 bg-white/[0.055] px-[clamp(1.25rem,4vw,4rem)] py-12 shadow-[0_24px_80px_rgba(0,0,0,0.24)] backdrop-blur-md md:my-20 md:py-16';
 const monoClass = "font-['Google_Sans_Code'] uppercase tracking-[0.12em]";
-
-function scrollToId(id: string) {
-  document
-    .getElementById(id)
-    ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
+const sectionIds = [
+  'info',
+  'skills',
+  'projects',
+  'experience',
+  'blogs',
+  'hobbies',
+  'contact',
+];
 
 function isLikelyInEurope() {
   const zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -165,56 +166,85 @@ function isLikelyInEurope() {
 
 function App() {
   const [inEurope] = useState(isLikelyInEurope);
+  const [activeSection, setActiveSection] = useState('info');
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+        if (visible?.target.id) setActiveSection(visible.target.id);
+      },
+      { rootMargin: '-30% 0px -55% 0px', threshold: [0, 0.2, 0.5] },
+    );
+
+    sectionIds.forEach((id) => {
+      const section = document.getElementById(id);
+      if (section) observer.observe(section);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   const dockItems = [
     {
       icon: <House size={18} />,
       label: 'Info',
-      onClick: () => scrollToId('info'),
+      href: '#info',
+      className: activeSection === 'info' ? 'dock-item--active' : undefined,
     },
     {
       icon: <Code2 size={18} />,
       label: 'Skills',
-      onClick: () => scrollToId('skills'),
+      href: '#skills',
+      className: activeSection === 'skills' ? 'dock-item--active' : undefined,
     },
     {
       icon: <FolderCode size={18} />,
       label: 'Projects',
-      onClick: () => scrollToId('projects'),
+      href: '#projects',
+      className: activeSection === 'projects' ? 'dock-item--active' : undefined,
     },
     {
       icon: <BriefcaseBusiness size={18} />,
       label: 'Experience',
-      onClick: () => scrollToId('experience'),
+      href: '#experience',
+      className:
+        activeSection === 'experience' ? 'dock-item--active' : undefined,
     },
     {
       icon: <Newspaper size={18} />,
       label: 'Writing',
-      onClick: () => scrollToId('blogs'),
+      href: '#blogs',
+      className: activeSection === 'blogs' ? 'dock-item--active' : undefined,
     },
     {
       icon: <Heart size={18} />,
       label: 'Hobbies',
-      onClick: () => scrollToId('hobbies'),
+      href: '#hobbies',
+      className: activeSection === 'hobbies' ? 'dock-item--active' : undefined,
     },
     {
       icon: <Mail size={18} />,
       label: 'Contact',
-      onClick: () => {
-        window.location.href = 'mailto:hello.zeesh@gmail.com';
-      },
+      href: '#contact',
+      className: activeSection === 'contact' ? 'dock-item--active' : undefined,
     },
   ];
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden bg-[radial-gradient(circle_at_50%_0%,#281b35_0%,#120f17_42%,#120f17_100%)] font-['Bricolage_Grotesque'] text-[#f7f3fa] selection:bg-[#ff9ffc] selection:text-[#1a1020]">
+    <div className="relative min-h-screen overflow-x-hidden bg-[#120f17] font-['Bricolage_Grotesque'] text-[#f7f3fa] selection:bg-[#ff9ffc] selection:text-[#1a1020]">
+      <div className="persistent-stars pointer-events-none fixed inset-0 z-0" />
       <div
-        className="pointer-events-auto fixed inset-0 z-0 opacity-30 motion-reduce:hidden"
+        className="pointer-events-auto fixed inset-0 z-0 opacity-100 motion-reduce:hidden"
         aria-hidden="true"
       >
         <Antigravity
-          count={90}
+          count={120}
           color="#FF9FFC"
-          particleSize={0.85}
+          particleSize={1}
           ringRadius={7}
           magnetRadius={8}
           waveAmplitude={0.2}
@@ -224,97 +254,85 @@ function App() {
         />
       </div>
 
-      <div className="fixed top-4 left-1/2 z-50 h-24 -translate-x-1/2 max-md:top-auto max-md:bottom-1 max-md:h-20 [&_.dock-icon]:size-[18px] [&_.dock-item]:border-white/10 [&_.dock-item]:bg-[#211a29] [&_.dock-item]:text-[#ede7f1] [&_.dock-label]:border [&_.dock-label]:border-white/10 [&_.dock-label]:bg-[#211a29] [&_.dock-panel]:border-white/10 [&_.dock-panel]:bg-[#18131fb8] [&_.dock-panel]:backdrop-blur-xl max-md:[&_.dock-outer]:!h-[78px] max-md:[&_.dock-panel]:origin-bottom max-md:[&_.dock-panel]:scale-[0.78]">
-        <Dock
-          items={dockItems}
-          baseItemSize={42}
-          magnification={58}
-          panelHeight={56}
-          dockHeight={150}
-          distance={130}
-        />
-      </div>
+      <nav
+        className="fixed top-1/2 right-3 z-50 flex -translate-y-1/2 flex-col gap-2 rounded-2xl border border-white/10 bg-[#18131fb8] p-2 backdrop-blur-xl max-md:right-1 max-md:scale-[0.82]"
+        aria-label="Page sections"
+      >
+        {dockItems.map((item) => (
+          <a
+            className={`group relative grid size-11 place-items-center rounded-xl border bg-[#211a29] text-[#ede7f1] transition-all hover:border-white/25 hover:text-white ${item.className ?? 'border-white/10'}`}
+            href={item.href}
+            aria-label={item.label}
+            aria-current={item.className ? 'location' : undefined}
+            key={item.href}
+          >
+            {item.icon}
+            <span className="pointer-events-none absolute top-1/2 right-[calc(100%+0.65rem)] -translate-y-1/2 rounded-md border border-white/10 bg-[#211a29] px-2 py-1 text-xs whitespace-nowrap opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
+              {item.label}
+            </span>
+          </a>
+        ))}
+      </nav>
 
       <main className="pointer-events-none relative z-10 [&_a]:pointer-events-auto [&_button]:pointer-events-auto [&_[role=button]]:pointer-events-auto">
         <section
-          className={`${sectionClass} grid min-h-screen items-center gap-16 pt-28 lg:grid-cols-[1.15fr_0.85fr]`}
+          className={`${sectionClass} grid items-center gap-10 lg:grid-cols-[1.5fr_0.5fr]`}
           id="info"
         >
           <div>
-            <Kicker>Available for remote work</Kicker>
-            <div className="my-10 flex min-h-24 flex-col items-start gap-3 md:min-h-16 md:flex-row md:items-center">
-              <RotatingText
-                texts={roles}
-                rotationInterval={2400}
-                mainClassName="inline-flex rounded-lg bg-[#ff9ffc] px-3 py-2 text-sm font-bold text-[#1a1020]"
-                splitBy="words"
-                staggerDuration={0.025}
-              />
-              <h1 className="m-0 text-[clamp(4.1rem,8vw,7.6rem)] leading-[0.8] font-medium tracking-[-0.065em]">
-                Engineer
+            <div className="my-10">
+              <p className={`${monoClass} mb-5 text-xs text-[#aaa2af]`}>
+                Zeeshan Iqbal
+              </p>
+              <h1 className="m-0 flex min-h-[1em] items-center gap-[0.18em] whitespace-nowrap text-left text-[clamp(1.5rem,3.2vw,3.5rem)] leading-none font-medium tracking-[-0.055em]">
+                <RotatingText
+                  texts={roles}
+                  rotationInterval={2400}
+                  mainClassName="inline-flex shrink-0 justify-start whitespace-pre text-[#ff9ffc] [&_.text-rotate-lines]:items-start"
+                  splitLevelClassName="justify-start whitespace-pre"
+                  staggerDuration={0.025}
+                />
+                <span>Engineer</span>
               </h1>
-            </div>
-
-            <div className="flex flex-wrap items-center gap-5">
-              <a
-                className="inline-flex items-center gap-2 rounded-lg bg-[#5227ff] px-5 py-4 text-xs font-bold text-white shadow-[0_8px_30px_rgba(82,39,255,0.2)]"
-                href="mailto:hello.zeesh@gmail.com"
-              >
-                Let’s build something <ExternalLink size={16} />
-              </a>
-              <a
-                className="flex items-center gap-2 text-xs text-[#aaa2af]"
-                href="https://github.com/sh-zee"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <Github size={18} /> GitHub
-              </a>
-              <a
-                className="flex items-center gap-2 text-xs text-[#aaa2af]"
-                href="https://www.linkedin.com/in/zee-sh"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <Linkedin size={18} /> LinkedIn
-              </a>
-            </div>
-
-            <div className="mt-12 flex max-w-xl border-t border-white/10">
-              {[
-                ['9', 'years'],
-                ['2.3M+', 'users scaled'],
-                ['150TB', 'data handled'],
-              ].map(([value, label], index) => (
-                <div
-                  className={`flex flex-1 flex-col gap-1 pt-5 ${index > 0 ? 'border-l border-white/10 pl-6' : ''}`}
-                  key={label}
-                >
-                  <strong className="text-2xl">{value}</strong>
-                  <span
-                    className={`${monoClass} text-[0.58rem] text-[#777079]`}
-                  >
-                    {label}
-                  </span>
-                </div>
-              ))}
             </div>
           </div>
 
-          <div className="flex scale-[0.82] justify-center lg:scale-[0.86] [&_.pc-card-wrapper]:pointer-events-auto">
-            <ProfileCard
-              avatarUrl="/profile-photo.jpg"
-              name="Zeeshan Iqbal"
-              title="Senior Backend Engineer"
-              handle="sh-zee"
-              status="Available"
-              contactText="Email me"
-              innerGradient="linear-gradient(145deg,#1b1622 0%,#5227ff44 52%,#ff9ffc22 100%)"
-              behindGlowColor="rgba(255,159,252,.2)"
-              onContactClick={() => {
-                window.location.href = 'mailto:hello.zeesh@gmail.com';
-              }}
+          <div className="flex flex-col items-center gap-3">
+            <img
+              className="h-auto w-full max-w-80 rounded-3xl object-contain shadow-[0_20px_55px_rgba(0,0,0,0.38)]"
+              src="/profile-photo.jpg"
+              alt="Zeeshan Iqbal"
             />
+            <div className="pointer-events-auto mt-2 flex flex-wrap justify-center gap-3 text-[#aaa2af]">
+              <a
+                className="grid size-12 place-items-center rounded-full border border-white/10 bg-white/5 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white"
+                href="https://github.com/sh-zee"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="GitHub"
+                title="GitHub"
+              >
+                <Github size={24} />
+              </a>
+              <a
+                className="grid size-12 place-items-center rounded-full border border-white/10 bg-white/5 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white"
+                href="https://www.linkedin.com/in/zee-sh"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="LinkedIn"
+                title="LinkedIn"
+              >
+                <Linkedin size={24} />
+              </a>
+              <a
+                className="grid size-12 place-items-center rounded-full border border-white/10 bg-white/5 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white"
+                href="mailto:hello.zeesh@gmail.com"
+                aria-label="Email"
+                title="Email"
+              >
+                <Mail size={24} />
+              </a>
+            </div>
           </div>
         </section>
 
@@ -388,8 +406,8 @@ function App() {
           </div>
         </section>
 
-        <section className="w-full scroll-mt-12 py-20 md:py-28" id="experience">
-          <div className="mx-auto w-[88vw] max-w-[1120px]">
+        <section className={`${sectionClass} overflow-hidden`} id="experience">
+          <div>
             <SectionHeader
               index="03 / Work experience"
               title="Nine years of"
@@ -411,7 +429,7 @@ function App() {
               {experience.map((item, index) => (
                 <ScrollStackItem
                   key={item.company}
-                  itemClassName="!mx-auto !min-h-80 !w-[86vw] !max-w-[900px] !rounded-2xl !border !border-white/10 !bg-[#19141f] !p-10 !shadow-[0_20px_55px_rgba(0,0,0,0.2)] max-md:!min-h-[430px] max-md:!p-8"
+                  itemClassName="!mx-auto !min-h-80 !w-full !max-w-[900px] !rounded-2xl !border !border-white/10 !bg-[#19141f] !p-10 !shadow-[0_20px_55px_rgba(0,0,0,0.2)] max-md:!min-h-[430px] max-md:!p-8"
                 >
                   <div
                     className={`${monoClass} flex justify-between text-[0.62rem] font-medium text-[#ff9ffc]`}
@@ -543,7 +561,7 @@ function App() {
           </div>
         </section>
 
-        <section className={`${sectionClass} py-36 text-center`}>
+        <section className={`${sectionClass} text-center`} id="contact">
           <div className="flex justify-center">
             <Kicker>Open to what’s next</Kicker>
           </div>

@@ -12,8 +12,49 @@ body,
 #root {
   min-height: 100%;
 }
+html {
+  scroll-behavior: smooth;
+}
 body {
   margin: 0;
   min-width: 320px;
   background: #120f17;
+}
+
+.persistent-stars {
+  background-image:
+    radial-gradient(circle, rgba(255, 159, 252, 0.9) 1px, transparent 1.5px),
+    radial-gradient(circle, rgba(247, 243, 250, 0.75) 1px, transparent 1.5px),
+    radial-gradient(
+      circle,
+      rgba(255, 159, 252, 0.65) 0.75px,
+      transparent 1.25px
+    );
+  background-position:
+    0 0,
+    31px 47px,
+    17px 23px;
+  background-size:
+    89px 83px,
+    131px 127px,
+    61px 67px;
+}
+
+.dock-item--active {
+  border-color: rgba(255, 159, 252, 0.75);
+  color: #ff9ffc;
+  box-shadow:
+    0 0 0 3px rgba(255, 159, 252, 0.1),
+    0 0 24px rgba(255, 159, 252, 0.24);
+}
+
+.dock-item--active::after {
+  content: '';
+  position: absolute;
+  right: -0.65rem;
+  width: 0.35rem;
+  height: 0.35rem;
+  border-radius: 999px;
+  background: #ff9ffc;
+  box-shadow: 0 0 10px #ff9ffc;
 }

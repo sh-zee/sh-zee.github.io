@@ -7,16 +7,9 @@ import {
   useSpring,
   useTransform,
   type SpringOptions,
-  AnimatePresence,
+  AnimatePresence
 } from 'motion/react';
-import React, {
-  Children,
-  cloneElement,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { Children, cloneElement, useEffect, useMemo, useRef, useState } from 'react';
 
 import './Dock.css';
 
@@ -59,24 +52,20 @@ function DockItem({
   distance,
   magnification,
   baseItemSize,
-  label,
+  label
 }: DockItemProps) {
   const ref = useRef<HTMLDivElement>(null);
   const isHovered = useMotionValue(0);
 
-  const mouseDistance = useTransform(mouseX, (val) => {
+  const mouseDistance = useTransform(mouseX, val => {
     const rect = ref.current?.getBoundingClientRect() ?? {
       x: 0,
-      width: baseItemSize,
+      width: baseItemSize
     };
     return val - rect.x - baseItemSize / 2;
   });
 
-  const targetSize = useTransform(
-    mouseDistance,
-    [-distance, 0, distance],
-    [baseItemSize, magnification, baseItemSize],
-  );
+  const targetSize = useTransform(mouseDistance, [-distance, 0, distance], [baseItemSize, magnification, baseItemSize]);
   const size = useSpring(targetSize, spring);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -91,7 +80,7 @@ function DockItem({
       ref={ref}
       style={{
         width: size,
-        height: size,
+        height: size
       }}
       onHoverStart={() => isHovered.set(1)}
       onHoverEnd={() => isHovered.set(0)}
@@ -105,13 +94,10 @@ function DockItem({
       aria-haspopup="true"
       aria-label={typeof label === 'string' ? label : undefined}
     >
-      {Children.map(children, (child) =>
+      {Children.map(children, child =>
         React.isValidElement(child)
-          ? cloneElement(
-              child as React.ReactElement<{ isHovered?: MotionValue<number> }>,
-              { isHovered },
-            )
-          : child,
+          ? cloneElement(child as React.ReactElement<{ isHovered?: MotionValue<number> }>, { isHovered })
+          : child
       )}
     </motion.div>
   );
@@ -128,7 +114,7 @@ function DockLabel({ children, className = '', isHovered }: DockLabelProps) {
 
   useEffect(() => {
     if (!isHovered) return;
-    const unsubscribe = isHovered.on('change', (latest) => {
+    const unsubscribe = isHovered.on('change', latest => {
       setIsVisible(latest === 1);
     });
     return () => unsubscribe();
@@ -171,23 +157,20 @@ export default function Dock({
   distance = 200,
   panelHeight = 68,
   dockHeight = 256,
-  baseItemSize = 50,
+  baseItemSize = 50
 }: DockProps) {
   const mouseX = useMotionValue(Infinity);
   const isHovered = useMotionValue(0);
 
   const maxHeight = useMemo(
     () => Math.max(dockHeight, magnification + magnification / 2 + 4),
-    [magnification, dockHeight],
+    [magnification, dockHeight]
   );
   const heightRow = useTransform(isHovered, [0, 1], [panelHeight, maxHeight]);
   const height = useSpring(heightRow, spring);
 
   return (
-    <motion.div
-      style={{ height, scrollbarWidth: 'none' }}
-      className="dock-outer"
-    >
+    <motion.div style={{ height, scrollbarWidth: 'none' }} className="dock-outer">
       <motion.div
         onMouseMove={({ pageX }) => {
           isHovered.set(1);

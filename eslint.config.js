@@ -7,7 +7,13 @@ import tseslint from 'typescript-eslint';
 import { defineConfig, globalIgnores } from 'eslint/config';
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  globalIgnores([
+    'dist',
+    'src/components/Antigravity.tsx',
+    'src/components/Dock.tsx',
+    'src/components/ProfileCard.tsx',
+    'src/components/RotatingText.tsx',
+  ]),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [

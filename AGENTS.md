@@ -19,3 +19,9 @@
   rules cannot conflict with Prettier.
 - Do not disable lint rules merely to make a check pass. Resolve the underlying
   issue unless the exception is documented and intentional.
+
+## Vendor components
+
+- Files pulled from the React Bits registry in `src/components/` are vendor
+  source and must not be edited. Implement portfolio-specific behavior in page
+  code, wrapper components, or project-level styles instead.

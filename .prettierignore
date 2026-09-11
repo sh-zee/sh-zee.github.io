@@ -3,3 +3,10 @@ node_modules
 package-lock.json
 Profile.pdf
 public/hobbies/*.svg
+src/components/Antigravity.tsx
+src/components/Dock.css
+src/components/Dock.tsx
+src/components/ProfileCard.css
+src/components/ProfileCard.tsx
+src/components/RotatingText.css
+src/components/RotatingText.tsx
