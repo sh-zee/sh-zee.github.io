@@ -5,23 +5,22 @@ import {
   Code2,
   ExternalLink,
   FolderCode,
-  Github,
   Heart,
   House,
-  Linkedin,
   Mail,
   MapPin,
   Newspaper,
   Plane,
   Trophy,
 } from 'lucide-react';
+import { FaGithub, FaLinkedinIn } from 'react-icons/fa6';
 import { Kicker, SectionHeader } from './components/portfolio';
-import Antigravity from './components/Antigravity';
-import RotatingText from './components/RotatingText';
 import {
+  Antigravity,
   BounceCards,
   Folder,
   MagicBento,
+  RotatingText,
   ScrollStack,
   ScrollStackItem,
   type BentoCardProps,
@@ -312,7 +311,7 @@ function App() {
                 aria-label="GitHub"
                 title="GitHub"
               >
-                <Github size={24} />
+                <FaGithub size={24} />
               </a>
               <a
                 className="grid size-12 place-items-center rounded-full border border-white/10 bg-white/5 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white"
@@ -322,7 +321,7 @@ function App() {
                 aria-label="LinkedIn"
                 title="LinkedIn"
               >
-                <Linkedin size={24} />
+                <FaLinkedinIn size={24} />
               </a>
               <a
                 className="grid size-12 place-items-center rounded-full border border-white/10 bg-white/5 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white"

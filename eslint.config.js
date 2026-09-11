@@ -7,21 +7,18 @@ import tseslint from 'typescript-eslint';
 import { defineConfig, globalIgnores } from 'eslint/config';
 
 export default defineConfig([
-  globalIgnores([
-    'dist',
-    'src/components/Antigravity.tsx',
-    'src/components/Dock.tsx',
-    'src/components/ProfileCard.tsx',
-    'src/components/RotatingText.tsx',
-  ]),
+  globalIgnores(['dist', 'src/components/react-bits/**']),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [
       js.configs.recommended,
       tseslint.configs.recommended,
-      reactHooks.configs['recommended-latest'],
       reactRefresh.configs.vite,
     ],
+    plugins: {
+      'react-hooks': reactHooks,
+    },
+    rules: reactHooks.configs['recommended-latest'].rules,
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,

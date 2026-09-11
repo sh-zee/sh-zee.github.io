@@ -22,6 +22,6 @@
 
 ## Vendor components
 
-- Files pulled from the React Bits registry in `src/components/` are vendor
-  source and must not be edited. Implement portfolio-specific behavior in page
-  code, wrapper components, or project-level styles instead.
+- Files in `src/components/react-bits/` are immutable vendor source and must
+  not be edited. Implement portfolio-specific behavior in page code, wrapper
+  components, or project-level styles instead.
