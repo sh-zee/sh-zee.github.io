@@ -12,6 +12,7 @@ import {
   Newspaper,
   Plane,
   Trophy,
+  type LucideIcon,
 } from 'lucide-react';
 import { FaGithub, FaLinkedinIn } from 'react-icons/fa6';
 import { Kicker, SectionHeader } from './components/portfolio';
@@ -23,119 +24,52 @@ import {
   RotatingText,
   ScrollStack,
   ScrollStackItem,
-  type BentoCardProps,
 } from './components/react-bits';
+import {
+  experience,
+  externalLinks,
+  hobbies,
+  profile,
+  projects,
+  skills,
+  type HobbyId,
+  type ProjectId,
+} from './content';
 
-const roles = [
-  ' Senior Software ',
-  ' Senior Backend. ',
-  'Senior Full-Stack',
-  '       IoT       ',
-  '       Rust      ',
-];
+interface ProjectPresentation {
+  color: string;
+  files: string[];
+}
 
-const skills: BentoCardProps[] = [
-  {
-    label: 'Core',
-    title: 'Backend systems',
-    description: 'NestJS · Node.js · Go · Python',
-  },
-  {
-    label: 'Systems',
-    title: 'Rust & performance',
-    description: 'Rust · C/C++ · concurrency · profiling',
-  },
-  {
-    label: 'Infrastructure',
-    title: 'Cloud architecture',
-    description: 'AWS · GCP · serverless · DevOps',
-  },
-  {
-    label: 'Data',
-    title: 'Storage & messaging',
-    description: 'PostgreSQL · Kafka · Redis · DynamoDB',
-  },
-  {
-    label: 'Connected',
-    title: 'IoT engineering',
-    description: 'Sensors · telemetry · monitoring · edge',
-  },
-  {
-    label: 'Intelligence',
-    title: 'Applied AI',
-    description: 'OpenAI · RAG · vector DBs · LangChain',
-  },
-];
-
-const projects = [
-  {
-    name: 'Emanda',
-    kind: 'FinTech · Digital accountant',
-    summary: 'DDD financial platform with 250+ endpoints.',
-    impact: '8× database performance',
+const projectPresentation: Record<ProjectId, ProjectPresentation> = {
+  emanda: {
     color: '#5227FF',
     files: ['DDD', '250 APIs', 'AWS'],
   },
-  {
-    name: 'FanKave',
-    kind: 'SaaS · Event engagement',
-    summary: 'Enterprise engagement infrastructure for event apps.',
-    impact: '5× faster APIs',
+  fankave: {
     color: '#7C5CFC',
     files: ['Node 24', 'TDD', 'Security'],
   },
-  {
-    name: 'KIM',
-    kind: 'AI · Professional mentor',
-    summary: 'Private, context-aware AI career mentorship.',
-    impact: 'Graph-powered context',
+  kim: {
     color: '#C06CFF',
     files: ['OpenAI', 'Graph', 'NestJS'],
   },
-  {
-    name: 'Open-AIQ',
-    kind: 'Open source · IoT',
-    summary: 'Crowdsourced real-time air quality monitoring.',
-    impact: 'Open environmental data',
+  'open-aiq': {
     color: '#FF9FFC',
     files: ['IoT', 'Open', 'Air'],
   },
-];
+};
 
-const experience = [
-  {
-    dates: 'Dec 2025 — Jul 2026',
-    role: 'Software Engineer',
-    company: 'FanKave · Santa Clara, CA',
-    body: 'Accelerated APIs by 5×, created the first meaningful test suite, and eliminated critical security vulnerabilities through a complete Node.js modernization.',
-    facts: [
-      '400ms → 100ms',
-      '0% → 25% coverage',
-      '35 major vulnerabilities resolved',
-    ],
-  },
-  {
-    dates: 'Mar 2023 — Nov 2025',
-    role: 'Lead Software Engineer',
-    company: 'Avant Tech · Victoria, Australia',
-    body: 'Led Emanda from architecture through delivery using DDD, a modular monolith, TDD, AWS, and applied AI.',
-    facts: ['250+ endpoints', '8× faster database', '80% less memory'],
-  },
-  {
-    dates: 'Feb 2019 — Feb 2023',
-    role: 'Senior Software Engineer',
-    company: 'CYBR Node · Austin, TX',
-    body: 'Led five engineers while scaling backend infrastructure for multinational clients and mentoring three engineers into senior roles.',
-    facts: ['2.3M+ users', '150TB data', '70% velocity increase'],
-  },
-  {
-    dates: 'Jun 2017 — Jan 2019',
-    role: 'Full-Stack & IoT Developer',
-    company: 'Makeistan · Pakistan',
-    body: 'Built connected monitoring products for research centers, startups, small businesses, and multinational companies.',
-    facts: ['Cold-chain monitoring', 'CO₂ systems', 'Warehouse telemetry'],
-  },
-];
+interface HobbyPresentation {
+  icon: LucideIcon;
+  image: string;
+}
+
+const hobbyPresentation: Record<HobbyId, HobbyPresentation> = {
+  reading: { icon: BookOpen, image: '/hobbies/reading.svg' },
+  travel: { icon: Plane, image: '/hobbies/travel.svg' },
+  chess: { icon: Trophy, image: '/hobbies/chess.svg' },
+};
 
 const sectionClass =
   'mx-auto my-14 w-[88vw] max-w-[1120px] scroll-mt-12 rounded-[28px] border border-white/10 bg-white/[0.055] px-[clamp(1.25rem,4vw,4rem)] py-12 shadow-[0_24px_80px_rgba(0,0,0,0.24)] backdrop-blur-md md:my-20 md:py-16';
@@ -281,11 +215,11 @@ function App() {
           <div>
             <div className="my-10">
               <p className={`${monoClass} mb-5 text-xs text-[#aaa2af]`}>
-                Zeeshan Iqbal
+                {profile.name}
               </p>
               <h1 className="m-0 flex min-h-[1em] items-center gap-[0.18em] whitespace-nowrap text-left text-[clamp(1.5rem,3.2vw,3.5rem)] leading-none font-medium tracking-[-0.055em]">
                 <RotatingText
-                  texts={roles}
+                  texts={profile.roles}
                   rotationInterval={2400}
                   mainClassName="inline-flex shrink-0 justify-start whitespace-pre text-[#ff9ffc] [&_.text-rotate-lines]:items-start"
                   splitLevelClassName="justify-start whitespace-pre"
@@ -300,12 +234,12 @@ function App() {
             <img
               className="h-auto w-full max-w-80 rounded-3xl object-contain shadow-[0_20px_55px_rgba(0,0,0,0.38)]"
               src="/profile-photo.jpg"
-              alt="Zeeshan Iqbal"
+              alt={profile.name}
             />
             <div className="pointer-events-auto mt-2 flex flex-wrap justify-center gap-3 text-[#aaa2af]">
               <a
                 className="grid size-12 place-items-center rounded-full border border-white/10 bg-white/5 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white"
-                href="https://github.com/sh-zee"
+                href={profile.socialUrls.github}
                 target="_blank"
                 rel="noreferrer"
                 aria-label="GitHub"
@@ -315,7 +249,7 @@ function App() {
               </a>
               <a
                 className="grid size-12 place-items-center rounded-full border border-white/10 bg-white/5 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white"
-                href="https://www.linkedin.com/in/zee-sh"
+                href={profile.socialUrls.linkedin}
                 target="_blank"
                 rel="noreferrer"
                 aria-label="LinkedIn"
@@ -325,7 +259,7 @@ function App() {
               </a>
               <a
                 className="grid size-12 place-items-center rounded-full border border-white/10 bg-white/5 transition-all hover:border-white/20 hover:bg-white/10 hover:text-white"
-                href="mailto:hello.zeesh@gmail.com"
+                href={`mailto:${profile.email}`}
                 aria-label="Email"
                 title="Email"
               >
@@ -365,43 +299,47 @@ function App() {
             summary="Four products spanning finance, events, AI mentorship, and environmental IoT."
           />
           <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-            {projects.map((project) => (
-              <article
-                className="min-w-0 rounded-[14px] border border-white/10 bg-[#19141fb8] p-6"
-                key={project.name}
-              >
-                <div className="pointer-events-auto grid h-[170px] place-items-center">
-                  <Folder
-                    color={project.color}
-                    size={1.25}
-                    items={project.files.map((file) => (
-                      <span
-                        className={`${monoClass} grid size-full place-items-center text-[0.52rem] font-bold text-[#19141f]`}
-                        key={file}
-                      >
-                        {file}
-                      </span>
-                    ))}
-                  />
-                </div>
-                <p
-                  className={`${monoClass} mt-4 mb-2 text-[0.56rem] text-[#817a85]`}
+            {projects.map((project) => {
+              const presentation = projectPresentation[project.id];
+
+              return (
+                <article
+                  className="min-w-0 rounded-[14px] border border-white/10 bg-[#19141fb8] p-6"
+                  key={project.id}
                 >
-                  {project.kind}
-                </p>
-                <h3 className="mb-3 text-3xl tracking-[-0.05em]">
-                  {project.name}
-                </h3>
-                <p className="min-h-16 text-xs leading-relaxed text-[#938b99]">
-                  {project.summary}
-                </p>
-                <strong
-                  className={`${monoClass} text-[0.6rem] font-medium text-[#ff9ffc]`}
-                >
-                  {project.impact}
-                </strong>
-              </article>
-            ))}
+                  <div className="pointer-events-auto grid h-[170px] place-items-center">
+                    <Folder
+                      color={presentation.color}
+                      size={1.25}
+                      items={presentation.files.map((file) => (
+                        <span
+                          className={`${monoClass} grid size-full place-items-center text-[0.52rem] font-bold text-[#19141f]`}
+                          key={file}
+                        >
+                          {file}
+                        </span>
+                      ))}
+                    />
+                  </div>
+                  <p
+                    className={`${monoClass} mt-4 mb-2 text-[0.56rem] text-[#817a85]`}
+                  >
+                    {project.kind}
+                  </p>
+                  <h3 className="mb-3 text-3xl tracking-[-0.05em]">
+                    {project.name}
+                  </h3>
+                  <p className="min-h-16 text-xs leading-relaxed text-[#938b99]">
+                    {project.summary}
+                  </p>
+                  <strong
+                    className={`${monoClass} text-[0.6rem] font-medium text-[#ff9ffc]`}
+                  >
+                    {project.impact}
+                  </strong>
+                </article>
+              );
+            })}
           </div>
         </section>
 
@@ -427,7 +365,7 @@ function App() {
             >
               {experience.map((item, index) => (
                 <ScrollStackItem
-                  key={item.company}
+                  key={item.id}
                   itemClassName="!mx-auto !min-h-80 !w-full !max-w-[900px] !rounded-2xl !border !border-white/10 !bg-[#19141f] !p-10 !shadow-[0_20px_55px_rgba(0,0,0,0.2)] max-md:!min-h-[430px] max-md:!p-8"
                 >
                   <div
@@ -472,7 +410,7 @@ function App() {
           />
           <a
             className="grid gap-8 rounded-[14px] border border-[#ff9ffc2e] bg-[linear-gradient(120deg,rgba(82,39,255,.13),rgba(255,159,252,.055))] p-8 transition hover:-translate-y-1 hover:border-[#ff9ffc70] md:grid-cols-[1fr_180px] md:p-12"
-            href="https://medium.com"
+            href={externalLinks.medium}
             target="_blank"
             rel="noreferrer"
           >
@@ -510,11 +448,9 @@ function App() {
           <div className="grid min-h-[440px] items-center gap-12 lg:grid-cols-2">
             <div className="pointer-events-auto justify-self-center max-md:-mx-24 max-md:scale-[0.68] [&_.card]:!border [&_.card]:!border-white/10 [&_.card]:!shadow-[0_22px_55px_rgba(0,0,0,0.28)]">
               <BounceCards
-                images={[
-                  '/hobbies/reading.svg',
-                  '/hobbies/travel.svg',
-                  '/hobbies/chess.svg',
-                ]}
+                images={hobbies.map(
+                  (hobby) => hobbyPresentation[hobby.id].image,
+                )}
                 containerWidth={520}
                 containerHeight={390}
                 enableHover
@@ -526,36 +462,26 @@ function App() {
               />
             </div>
             <div className="border-t border-white/10 max-md:-mt-20">
-              {[
-                [
-                  <BookOpen key="icon" />,
-                  'Reading',
-                  'Systems, history, psychology, and anything that changes the frame.',
-                ],
-                [
-                  <Plane key="icon" />,
-                  'Travel',
-                  'New cities, unfamiliar routines, and seeing how other people build.',
-                ],
-                [
-                  <Trophy key="icon" />,
-                  'Chess',
-                  'Pattern recognition, patience, and the cost of the tempting move.',
-                ],
-              ].map(([icon, title, body]) => (
-                <div
-                  className="grid grid-cols-[45px_1fr] gap-5 border-b border-white/10 py-6"
-                  key={String(title)}
-                >
-                  <span className="text-[#ff9ffc]">{icon}</span>
-                  <span className="text-xs leading-relaxed text-[#938b99]">
-                    <b className="mb-1 block text-base text-[#f7f3fa]">
-                      {title}
-                    </b>
-                    {body}
-                  </span>
-                </div>
-              ))}
+              {hobbies.map((hobby) => {
+                const Icon = hobbyPresentation[hobby.id].icon;
+
+                return (
+                  <div
+                    className="grid grid-cols-[45px_1fr] gap-5 border-b border-white/10 py-6"
+                    key={hobby.id}
+                  >
+                    <span className="text-[#ff9ffc]">
+                      <Icon />
+                    </span>
+                    <span className="text-xs leading-relaxed text-[#938b99]">
+                      <b className="mb-1 block text-base text-[#f7f3fa]">
+                        {hobby.title}
+                      </b>
+                      {hobby.description}
+                    </span>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </section>
@@ -578,14 +504,14 @@ function App() {
           </p>
           <a
             className="inline-flex items-center gap-2 rounded-lg bg-[#5227ff] px-5 py-4 text-xs font-bold text-white shadow-[0_8px_30px_rgba(82,39,255,0.2)]"
-            href="mailto:hello.zeesh@gmail.com"
+            href={`mailto:${profile.email}`}
           >
-            hello.zeesh@gmail.com <ExternalLink size={16} />
+            {profile.email} <ExternalLink size={16} />
           </a>
           <div
             className={`${monoClass} mt-8 flex items-center justify-center gap-2 text-[0.56rem] text-[#777079]`}
           >
-            <MapPin size={14} /> Pakistan · working globally
+            <MapPin size={14} /> {profile.locationLabel}
           </div>
         </section>
       </main>
@@ -596,8 +522,10 @@ function App() {
         <span className="font-['Bricolage_Grotesque'] text-base font-bold text-[#ff9ffc]">
           ZI.
         </span>
-        <p>Senior Backend Engineer · Rust · IoT</p>
-        <small>© {new Date().getFullYear()} Zeeshan Iqbal</small>
+        <p>{profile.professionalSummary}</p>
+        <small>
+          © {new Date().getFullYear()} {profile.name}
+        </small>
       </footer>
     </div>
   );
